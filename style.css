@@ -1,0 +1,1106 @@
+/* ==========================================
+   DRAW2WEB AI
+   MIDNIGHT NAVY + ELECTRIC CYAN
+========================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    min-height: 100vh;
+
+    color: #e8f1f5;
+
+    background:
+        radial-gradient(
+            circle at 15% 10%,
+            rgba(0, 229, 255, 0.10),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 85% 80%,
+            rgba(255, 193, 7, 0.06),
+            transparent 25%
+        ),
+        #07131f;
+
+    line-height: 1.6;
+}
+
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.main-header {
+    width: 100%;
+    min-height: 72px;
+
+    padding: 0 7%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    background: rgba(7, 19, 31, 0.82);
+
+    border-bottom: 1px solid
+        rgba(255, 255, 255, 0.08);
+
+    backdrop-filter: blur(18px);
+}
+
+
+/* ==========================================
+   LOGO
+========================================== */
+
+.logo {
+    font-size: 22px;
+    font-weight: 700;
+
+    letter-spacing: 0.5px;
+
+    color: #f5fbff;
+}
+
+.logo span {
+    color: #00e5ff;
+}
+
+
+/* ==========================================
+   NAVIGATION
+========================================== */
+
+.main-header nav {
+    display: flex;
+    align-items: center;
+
+    gap: 28px;
+}
+
+.main-header nav a {
+    position: relative;
+
+    color: #91a6b5;
+
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    transition: 0.25s ease;
+}
+
+.main-header nav a:hover {
+    color: #00e5ff;
+}
+
+.main-header nav a::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    bottom: -7px;
+
+    width: 0;
+    height: 2px;
+
+    background: #00e5ff;
+
+    transition: 0.25s ease;
+}
+
+.main-header nav a:hover::after {
+    width: 100%;
+}
+
+
+/* ==========================================
+   HERO
+========================================== */
+
+.hero {
+    width: 100%;
+
+    min-height: 540px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 80px 20px;
+
+    background:
+        radial-gradient(
+            circle at 50% 35%,
+            rgba(0, 229, 255, 0.12),
+            transparent 35%
+        );
+}
+
+.hero-content {
+    width: min(850px, 92%);
+
+    margin: auto;
+}
+
+.hero h1 {
+    font-size: clamp(
+        40px,
+        6vw,
+        72px
+    );
+
+    line-height: 1.05;
+
+    margin-bottom: 22px;
+
+    color: #f4fbff;
+
+    letter-spacing: -2px;
+}
+
+.hero h1 span {
+    display: inline;
+
+    background: linear-gradient(
+        90deg,
+        #00e5ff,
+        #5ff3ff,
+        #f5c542
+    );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero p {
+    max-width: 680px;
+
+    margin: 0 auto 32px;
+
+    color: #91a6b5;
+
+    font-size: 17px;
+
+    line-height: 1.8;
+}
+
+
+/* ==========================================
+   HERO BUTTON
+========================================== */
+
+.hero-button {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 13px 24px;
+
+    color: #07131f;
+
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    border-radius: 10px;
+
+    background: #00e5ff;
+
+    box-shadow:
+        0 0 25px
+        rgba(0, 229, 255, 0.18);
+
+    transition: 0.25s ease;
+}
+
+.hero-button:hover {
+    transform: translateY(-3px);
+
+    background: #5ff3ff;
+
+    box-shadow:
+        0 0 35px
+        rgba(0, 229, 255, 0.32);
+}
+
+
+/* ==========================================
+   COMMON SECTION
+========================================== */
+
+.editor-section,
+.preview-section,
+.how-section {
+    width: min(1100px, 86%);
+
+    margin: auto;
+
+    padding: 70px 0;
+}
+
+
+/* ==========================================
+   SECTION TITLE
+========================================== */
+
+.section-title {
+    text-align: center;
+
+    margin-bottom: 30px;
+}
+
+.section-title h2 {
+    font-size: 30px;
+
+    color: #f4fbff;
+
+    margin-bottom: 8px;
+}
+
+.section-title p {
+    color: #8298a7;
+
+    font-size: 15px;
+}
+
+
+/* ==========================================
+   TOOLBAR
+========================================== */
+
+.toolbar {
+    width: 100%;
+
+    min-height: 55px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-start;
+
+    gap: 12px;
+
+    padding: 12px 15px;
+
+    margin-bottom: 14px;
+
+    border-radius: 12px;
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.08);
+
+    background: rgba(
+        255,
+        255,
+        255,
+        0.035
+    );
+
+    backdrop-filter: blur(15px);
+}
+
+
+/* ==========================================
+   BRUSH CONTROL
+========================================== */
+
+.tool-group {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    color: #91a6b5;
+
+    font-size: 14px;
+}
+
+.tool-group label {
+    white-space: nowrap;
+}
+
+#brushSize {
+    width: 110px;
+
+    cursor: pointer;
+
+    accent-color: #00e5ff;
+}
+
+
+/* ==========================================
+   TOOLBAR BUTTONS
+========================================== */
+
+.toolbar button {
+    padding: 9px 15px;
+
+    border-radius: 8px;
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.10);
+
+    color: #c7d6df;
+
+    background: rgba(
+        255,
+        255,
+        255,
+        0.05
+    );
+
+    cursor: pointer;
+
+    font-size: 13px;
+
+    transition: 0.2s ease;
+}
+
+.toolbar button:hover {
+    color: #00e5ff;
+
+    border-color:
+        rgba(0, 229, 255, 0.3);
+
+    background: rgba(
+        0,
+        229,
+        255,
+        0.06
+    );
+
+    transform: translateY(-1px);
+}
+
+
+/* ==========================================
+   CANVAS CONTAINER
+========================================== */
+
+.canvas-container {
+    position: relative;
+
+    width: 100%;
+    height: 500px;
+
+    overflow: hidden;
+
+    border-radius: 16px;
+
+    background: #fffaf0;
+
+    border: 2px dashed #8ca0ad;
+
+    box-shadow:
+        0 20px 55px
+        rgba(0, 0, 0, 0.22);
+
+    transition: 0.25s ease;
+}
+
+.canvas-container:hover {
+    border-color: #00bcd4;
+
+    box-shadow:
+        0 0 30px
+        rgba(0, 229, 255, 0.08);
+}
+
+
+/* ==========================================
+   CANVAS
+========================================== */
+
+#drawingCanvas {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    cursor: crosshair;
+
+    touch-action: none;
+}
+
+
+/* ==========================================
+   CANVAS HINT
+========================================== */
+
+.canvas-hint {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    transform:
+        translate(-50%, -50%);
+
+    color: #8998a1;
+
+    font-size: 17px;
+
+    pointer-events: none;
+
+    transition: opacity 0.2s ease;
+}
+
+
+/* ==========================================
+   GENERATE AREA
+========================================== */
+
+.generate-area {
+    display: flex;
+
+    justify-content: center;
+
+    margin-top: 22px;
+}
+
+
+/* ==========================================
+   GENERATE BUTTON
+========================================== */
+
+#generateBtn {
+    padding: 13px 25px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    color: #07131f;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    background: linear-gradient(
+        135deg,
+        #00e5ff,
+        #5ff3ff
+    );
+
+    box-shadow:
+        0 8px 25px
+        rgba(0, 229, 255, 0.18);
+
+    transition: 0.25s ease;
+}
+
+#generateBtn:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 12px 35px
+        rgba(0, 229, 255, 0.32);
+}
+
+#generateBtn:active {
+    transform: translateY(0);
+}
+
+
+/* ==========================================
+   PREVIEW SECTION
+========================================== */
+
+.preview-section {
+    border-top: 1px solid
+        rgba(255, 255, 255, 0.06);
+}
+
+
+/* ==========================================
+   PREVIEW CONTROLS
+========================================== */
+
+.preview-controls {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    margin-bottom: 22px;
+}
+
+.preview-controls button {
+    padding: 9px 17px;
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.10);
+
+    border-radius: 8px;
+
+    color: #c7d6df;
+
+    background: rgba(
+        255,
+        255,
+        255,
+        0.05
+    );
+
+    cursor: pointer;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    transition: 0.25s ease;
+}
+
+.preview-controls button:hover {
+    color: #07131f;
+
+    background: #00e5ff;
+
+    border-color: #00e5ff;
+
+    transform: translateY(-1px);
+}
+
+
+/* ==========================================
+   PREVIEW WRAPPER
+========================================== */
+
+.preview-wrapper {
+    width: 100%;
+
+    min-height: 640px;
+
+    padding: 20px;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: center;
+
+    overflow: auto;
+
+    border-radius: 16px;
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.08);
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(0, 229, 255, 0.04),
+            transparent 50%
+        ),
+        #050c14;
+
+    box-shadow:
+        0 20px 60px
+        rgba(0, 0, 0, 0.25);
+}
+
+
+/* ==========================================
+   WEBSITE PREVIEW
+========================================== */
+
+#websitePreview {
+    width: 100%;
+    height: 600px;
+
+    display: block;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 10px 35px
+        rgba(0, 0, 0, 0.35);
+
+    transition:
+        width 0.4s ease,
+        height 0.4s ease;
+}
+
+
+/* ==========================================
+   COMPONENTS PANEL
+========================================== */
+
+.components-panel {
+    margin-top: 22px;
+
+    padding: 20px 22px;
+
+    border-radius: 14px;
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.08);
+
+    background: rgba(
+        255,
+        255,
+        255,
+        0.035
+    );
+
+    box-shadow:
+        0 15px 40px
+        rgba(0, 0, 0, 0.15);
+}
+
+.components-panel h3 {
+    margin-bottom: 14px;
+
+    color: #eaf7fb;
+
+    font-size: 18px;
+}
+
+#componentsList {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 9px;
+}
+
+#componentsList p {
+    color: #8298a7;
+
+    font-size: 14px;
+}
+
+.component-item {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 7px 13px;
+
+    border-radius: 20px;
+
+    color: #b9dce5;
+
+    background: rgba(
+        0,
+        229,
+        255,
+        0.06
+    );
+
+    border: 1px solid
+        rgba(0, 229, 255, 0.18);
+
+    font-size: 13px;
+}
+
+
+/* ==========================================
+   HOW IT WORKS
+========================================== */
+
+.how-section {
+    border-top: 1px solid
+        rgba(255, 255, 255, 0.06);
+}
+
+.steps {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 16px;
+}
+
+.step-card {
+    position: relative;
+
+    padding: 25px;
+
+    border-radius: 15px;
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.08);
+
+    background: rgba(
+        255,
+        255,
+        255,
+        0.035
+    );
+
+    transition: 0.25s ease;
+}
+
+.step-card:hover {
+    transform: translateY(-5px);
+
+    border-color:
+        rgba(0, 229, 255, 0.30);
+
+    background: rgba(
+        0,
+        229,
+        255,
+        0.04
+    );
+}
+
+.step-number {
+    margin-bottom: 12px;
+
+    color: #00e5ff;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+.step-card h3 {
+    margin-bottom: 8px;
+
+    color: #eaf7fb;
+
+    font-size: 18px;
+}
+
+.step-card p {
+    color: #8298a7;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+
+/* ==========================================
+   FOOTER
+========================================== */
+
+footer {
+    width: 100%;
+
+    padding: 45px 20px;
+
+    text-align: center;
+
+    border-top: 1px solid
+        rgba(255, 255, 255, 0.08);
+
+    background: #040a11;
+}
+
+footer .logo {
+    margin-bottom: 8px;
+}
+
+footer p {
+    color: #8298a7;
+
+    font-size: 13px;
+}
+
+footer .copyright {
+    margin-top: 15px;
+
+    color: #526674;
+
+    font-size: 12px;
+}
+
+
+/* ==========================================
+   FOCUS
+========================================== */
+
+button:focus-visible,
+input:focus-visible {
+    outline: 3px solid
+        rgba(0, 229, 255, 0.25);
+
+    outline-offset: 2px;
+}
+
+
+/* ==========================================
+   RESPONSIVE - TABLET
+========================================== */
+
+@media (max-width: 900px) {
+
+    .editor-section,
+    .preview-section,
+    .how-section {
+        width: 90%;
+    }
+
+    .steps {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .hero {
+        min-height: 480px;
+    }
+
+    .canvas-container {
+        height: 450px;
+    }
+}
+
+
+/* ==========================================
+   RESPONSIVE - MOBILE
+========================================== */
+
+@media (max-width: 600px) {
+
+    .main-header {
+        padding: 14px 5%;
+
+        flex-direction: column;
+
+        gap: 12px;
+    }
+
+    .main-header nav {
+        gap: 18px;
+    }
+
+    .hero {
+        min-height: 470px;
+
+        padding: 60px 15px;
+    }
+
+    .hero h1 {
+        font-size: 40px;
+
+        letter-spacing: -1px;
+    }
+
+    .hero p {
+        font-size: 15px;
+    }
+
+    .editor-section,
+    .preview-section,
+    .how-section {
+        width: 92%;
+
+        padding: 55px 0;
+    }
+
+    .section-title h2 {
+        font-size: 26px;
+    }
+
+    .toolbar {
+        flex-wrap: wrap;
+
+        padding: 12px;
+    }
+
+    .tool-group {
+        width: 100%;
+
+        justify-content: space-between;
+    }
+
+    #brushSize {
+        flex: 1;
+    }
+
+    .canvas-container {
+        height: 400px;
+    }
+
+    .preview-wrapper {
+        min-height: 550px;
+
+        padding: 10px;
+    }
+
+    #websitePreview {
+        height: 520px;
+    }
+
+    .steps {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ==========================================
+   SMALL MOBILE
+========================================== */
+
+@media (max-width: 450px) {
+
+    .logo {
+        font-size: 19px;
+    }
+
+    .main-header nav {
+        gap: 13px;
+    }
+
+    .main-header nav a {
+        font-size: 12px;
+    }
+
+    .hero h1 {
+        font-size: 34px;
+    }
+
+    .hero-button {
+        padding: 12px 20px;
+    }
+
+    .canvas-container {
+        height: 350px;
+    }
+
+    .preview-controls {
+        flex-direction: row;
+    }
+
+    .preview-controls button {
+        flex: 1;
+    }
+}
+/* FORCE HERO CONTENT VISIBLE */
+
+.hero {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.hero-content {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 10 !important;
+}
+
+.hero h1,
+.hero p,
+.hero-button {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+#codeViewer {
+    width: 100%;
+    min-height: 500px;
+    padding: 20px;
+    box-sizing: border-box;
+
+    background: #020812;
+    color: #e8f1f8;
+
+    border: 1px solid #29445a;
+    border-radius: 10px;
+
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 16px;
+    line-height: 1.7;
+
+    text-align: left;
+
+    white-space: pre;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+/* Make preview and code areas wider */
+
+.preview-section {
+    width: 92%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.preview-wrapper {
+    width: 100%;
+}
+
+#websitePreview {
+    width: 100%;
+    min-height: 650px;
+}
+
+.components-panel {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.code-section {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#codeViewer {
+    width: 100%;
+    min-height: 500px;
+    box-sizing: border-box;
+}
+.code-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.code-actions button {
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.code-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.code-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}

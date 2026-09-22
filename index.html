@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Draw2Web AI</title>
+
+    <meta name="description"
+          content="Draw your website idea and transform your sketch into a modern website with Draw2Web AI.">
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+<!-- ==========================================
+     NAVBAR
+========================================== -->
+
+<header class="main-header">
+
+    <div class="logo">
+        Draw2Web <span>AI</span>
+    </div>
+
+    <nav>
+
+        <a href="#home">
+            Home
+        </a>
+
+        <a href="#editor">
+            Draw
+        </a>
+
+        <a href="#preview">
+            Preview
+        </a>
+
+        <a href="#how">
+            How It Works
+        </a>
+
+    </nav>
+
+</header>
+
+
+
+<!-- ==========================================
+     HERO
+========================================== -->
+
+<section class="hero" id="home">
+
+    <div class="hero-content">
+
+        <h1>
+            Turn Your
+            <span>Drawing Into a Website</span>
+        </h1>
+
+        <p>
+            Draw your website idea like a simple wireframe
+            and transform your design into a modern responsive
+            website.
+        </p>
+
+        <a href="#editor" class="hero-button">
+            ✏️ Start Drawing
+        </a>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==========================================
+     DRAWING EDITOR
+========================================== -->
+
+<section class="editor-section" id="editor">
+
+    <div class="section-title">
+
+        <h2>
+            ✏️ Design Your Website
+        </h2>
+
+        <p>
+            Draw your website layout in the canvas below.
+        </p>
+
+    </div>
+
+
+    <!-- TOOLBAR -->
+
+    <div class="toolbar">
+
+        <div class="tool-group">
+
+            <label for="brushSize">
+                Brush Size
+            </label>
+
+            <input
+                type="range"
+                id="brushSize"
+                min="1"
+                max="20"
+                value="4"
+            >
+
+        </div>
+
+
+        <button
+            type="button"
+            onclick="undoCanvas()">
+
+            ↩ Undo
+
+        </button>
+
+
+        <button
+            type="button"
+            onclick="clearCanvas()">
+
+            🗑 Clear
+
+        </button>
+
+    </div>
+
+
+
+    <!-- CANVAS -->
+
+    <div class="canvas-container">
+
+        <canvas id="drawingCanvas"></canvas>
+
+        <div class="canvas-hint">
+
+            ✏️ Draw your website layout here
+
+        </div>
+
+    </div>
+
+
+
+    <!-- GENERATE -->
+
+    <div class="generate-area">
+
+        <button
+            id="generateBtn"
+            type="button"
+            onclick="generateWebsite()">
+
+            🤖 Generate Website
+
+        </button>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==========================================
+     PREVIEW
+========================================== -->
+
+<section class="preview-section" id="preview">
+
+    <div class="section-title">
+
+        <h2>
+            🌐 Website Preview
+        </h2>
+
+        <p>
+            Your generated website will appear below.
+        </p>
+
+    </div>
+
+
+
+    <!-- PREVIEW CONTROLS -->
+
+    <div class="preview-controls">
+
+        <button
+            type="button"
+            onclick="desktopPreview()">
+
+            🖥 Desktop
+
+        </button>
+
+
+        <button
+            type="button"
+            onclick="mobilePreview()">
+
+            📱 Mobile
+
+        </button>
+
+    </div>
+
+
+
+    <!-- WEBSITE -->
+
+    <div class="preview-wrapper">
+
+        <iframe
+            id="websitePreview"
+            title="Generated Website Preview">
+        </iframe>
+
+    </div>
+
+
+
+    <!-- COMPONENTS -->
+
+    <div class="components-panel">
+
+        <h3>
+            🧩 Detected Components
+        </h3>
+
+        <div id="componentsList">
+
+            <p>
+                Draw a layout and generate a website
+                to see detected components.
+            </p>
+
+        </div>
+
+    </div>
+    <div class="code-section">
+
+    <div class="code-header">
+        <h3>💻 Generated Code</h3>
+
+        <div>
+            <button onclick="copyHTML()">📋 Copy HTML</button>
+            <button onclick="copyCSS()">📋 Copy CSS</button>
+            <button onclick="downloadWebsite()">💾 Download</button>
+        </div>
+    </div>
+
+    <div class="code-tabs">
+        <button onclick="showHTML()">HTML</button>
+        <button onclick="showCSS()">CSS</button>
+    </div>
+
+    <pre id="codeViewer">Generate a website to view the code.</pre>
+
+</div>
+
+</section>
+
+
+
+<!-- ==========================================
+     HOW IT WORKS
+========================================== -->
+
+<section class="how-section" id="how">
+
+    <div class="section-title">
+
+        <h2>
+            ⚡ How It Works
+        </h2>
+
+        <p>
+            Turn your idea into a website in a few simple steps.
+        </p>
+
+    </div>
+
+
+
+    <div class="steps">
+
+
+        <div class="step-card">
+
+            <div class="step-number">
+                STEP 01
+            </div>
+
+            <h3>
+                ✏️ Draw
+            </h3>
+
+            <p>
+                Draw your website layout using the canvas.
+            </p>
+
+        </div>
+
+
+
+        <div class="step-card">
+
+            <div class="step-number">
+                STEP 02
+            </div>
+
+            <h3>
+                🤖 Analyze
+            </h3>
+
+            <p>
+                Your drawing is processed to understand
+                the website structure.
+            </p>
+
+        </div>
+
+
+
+        <div class="step-card">
+
+            <div class="step-number">
+                STEP 03
+            </div>
+
+            <h3>
+                💻 Generate
+            </h3>
+
+            <p>
+                HTML and CSS are generated from your
+                website idea.
+            </p>
+
+        </div>
+
+
+
+        <div class="step-card">
+
+            <div class="step-number">
+                STEP 04
+            </div>
+
+            <h3>
+                🚀 Preview
+            </h3>
+
+            <p>
+                See your generated website instantly
+                inside the preview window.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- ==========================================
+     FOOTER
+========================================== -->
+
+<footer>
+
+    <div class="logo">
+        Draw2Web <span>AI</span>
+    </div>
+
+    <p>
+        From Sketch to Website.
+    </p>
+
+    <p class="copyright">
+        © 2026 Draw2Web AI. Built with HTML, CSS & JavaScript.
+    </p>
+
+</footer>
+
+
+
+<!-- ==========================================
+     JAVASCRIPT
+========================================== -->
+
+<script src="script.js"></script>
+
+
+<!-- ==========================================
+     PREVIEW FUNCTIONS
+========================================== -->
+
+<script>
+
+function desktopPreview() {
+
+    const preview =
+        document.getElementById("websitePreview");
+
+    preview.style.width = "100%";
+    preview.style.height = "600px";
+
+}
+
+
+function mobilePreview() {
+
+    const preview =
+        document.getElementById("websitePreview");
+
+    preview.style.width = "390px";
+    preview.style.height = "650px";
+
+}
+
+</script>
+
+
+</body>
+
+</html>
