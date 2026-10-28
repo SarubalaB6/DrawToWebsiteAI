@@ -1,3 +1,4 @@
+
 const express = require("express");
 const cors = require("cors");
 const { GoogleGenAI } = require("@google/genai");
@@ -6,194 +7,314 @@ require("dotenv").config();
 const app = express();
 
 app.use(cors());
-app.use(express.json({ limit: "10mb" }));
+
+app.use(
+    express.json({
+        limit: "10mb"
+    })
+);
+
 
 const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY
 });
+
 
 // ========================================
 // HOME
 // ========================================
 
 app.get("/", (req, res) => {
+
     res.json({
-        message: "Draw2Web AI Backend is running 🚀"
+        message:
+            "Draw2Web AI Backend is running 🚀"
     });
+
 });
 
-// ========================================
-// SAFE JSON PARSER
-// ========================================
-
-function extractJSON(text) {
-    if (!text) {
-        throw new Error("Gemini returned an empty response");
-    }
-
-    text = text
-        .replace(/```json/gi, "")
-        .replace(/```/g, "")
-        .trim();
-
-    const firstBrace = text.indexOf("{");
-    const lastBrace = text.lastIndexOf("}");
-
-    if (firstBrace === -1 || lastBrace === -1) {
-        throw new Error("No valid JSON object found in Gemini response");
-    }
-
-    let jsonText = text.substring(firstBrace, lastBrace + 1);
-
-    jsonText = jsonText.replace(
-        /[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,
-        ""
-    );
-
-    try {
-        return JSON.parse(jsonText);
-    } catch (error) {
-        console.log("⚠️ Gemini returned invalid JSON.");
-        throw new Error(
-            "Gemini returned invalid JSON. Please try again."
-        );
-    }
-}
 
 // ========================================
-// GEMINI REQUEST WITH RETRY
+// REPAIR GEMINI JSON
 // ========================================
 
-async function generateWebsiteWithRetry(contents, maxRetries = 3) {
-    let lastError;
+function repairJSON(text) {
 
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-        try {
-            console.log(
-                `🔄 Gemini attempt ${attempt}/${maxRetries}`
-            );
+    let result = "";
 
-            const response = await ai.models.generateContent({
-                model: "gemini-3.6-flash",
-                contents: contents
-            });
+    let insideString = false;
 
-            console.log("🤖 Gemini response received");
+    let escaped = false;
 
-            return response;
 
-        } catch (error) {
-            lastError = error;
+    for (
+        let i = 0;
+        i < text.length;
+        i++
+    ) {
 
-            // ========================================
-            // CLEAN ERROR HANDLING
-            // ========================================
+        const char =
+            text[i];
 
-            if (error.status === 503) {
-                console.log(
-                    `⚠️ Gemini is temporarily busy. Retry ${attempt}/${maxRetries}...`
-                );
-            } else if (error.status === 429) {
-                console.log(
-                    `⚠️ Gemini request limit reached. Retry ${attempt}/${maxRetries}...`
-                );
-            } else if (error.status === 500) {
-                console.log(
-                    `⚠️ Gemini server error. Retry ${attempt}/${maxRetries}...`
-                );
-            } else {
-                console.log(
-                    `⚠️ Gemini request failed. Retry ${attempt}/${maxRetries}...`
-                );
+
+        // ====================================
+        // BACKSLASH
+        // ====================================
+
+        if (escaped) {
+
+            result += char;
+
+            escaped = false;
+
+            continue;
+
+        }
+
+
+        if (
+            char === "\\" &&
+            insideString
+        ) {
+
+            result += char;
+
+            escaped = true;
+
+            continue;
+
+        }
+
+
+        // ====================================
+        // QUOTE
+        // ====================================
+
+        if (char === '"') {
+
+            if (!insideString) {
+
+                insideString = true;
+
+                result += char;
+
+                continue;
+
             }
 
-            // ========================================
-            // RETRY TEMPORARY ERRORS
-            // ========================================
+
+            // Find next non-space character
+
+            let nextIndex =
+                i + 1;
+
+
+            while (
+                nextIndex < text.length &&
+                /\s/.test(
+                    text[nextIndex]
+                )
+            ) {
+
+                nextIndex++;
+
+            }
+
+
+            const nextChar =
+                text[nextIndex];
+
+
+            // ====================================
+            // REAL CLOSING QUOTE
+            // ====================================
 
             if (
-                error.status === 503 ||
-                error.status === 429 ||
-                error.status === 500
+                nextChar === "," ||
+                nextChar === "}" ||
+                nextChar === "]" ||
+                nextChar === ":"
             ) {
-                if (attempt < maxRetries) {
-                    const waitTime = attempt * 2000;
 
-                    console.log(
-                        `⏳ Waiting ${waitTime / 1000}s before retry...`
-                    );
+                insideString = false;
 
-                    await new Promise(resolve =>
-                        setTimeout(resolve, waitTime)
-                    );
+                result += char;
 
-                    continue;
-                }
             }
 
-            // Other errors
-            throw error;
+            // ====================================
+            // INNER QUOTE
+            // ====================================
+
+            else {
+
+                result += '\\"';
+
+            }
+
+            continue;
+
         }
+
+
+        // ====================================
+        // NEW LINE INSIDE STRING
+        // ====================================
+
+        if (
+            insideString &&
+            char === "\n"
+        ) {
+
+            result += "\\n";
+
+            continue;
+
+        }
+
+
+        if (
+            insideString &&
+            char === "\r"
+        ) {
+
+            continue;
+
+        }
+
+
+        result += char;
+
     }
 
-    throw lastError;
+
+    return result;
+
 }
+
+
+// ========================================
+// CLEAN AI RESPONSE
+// ========================================
+
+function cleanAIResponse(text) {
+
+    let cleaned =
+        text.trim();
+
+
+    // Remove markdown fences
+
+    cleaned =
+        cleaned
+            .replace(
+                /^```json\s*/i,
+                ""
+            )
+            .replace(
+                /^```\s*/i,
+                ""
+            )
+            .replace(
+                /\s*```$/i,
+                ""
+            )
+            .trim();
+
+
+    return cleaned;
+
+}
+
 
 // ========================================
 // ANALYZE DRAWING
 // ========================================
 
-app.post("/analyze", async (req, res) => {
+app.post(
+    "/analyze",
+    async (req, res) => {
 
-    try {
+        try {
 
-        const { image } = req.body;
+            const {
+                image
+            } = req.body;
 
-        // ========================================
-        // CHECK IMAGE
-        // ========================================
 
-        if (!image) {
-            return res.status(400).json({
-                success: false,
-                message: "Drawing image is required"
-            });
-        }
+            // ====================================
+            // CHECK IMAGE
+            // ====================================
 
-        console.log("🖼️ Drawing received");
+            if (!image) {
 
-        // ========================================
-        // IMAGE VALIDATION
-        // ========================================
+                return res.status(400).json({
 
-        const match = image.match(
-            /^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/
-        );
+                    success: false,
 
-        if (!match) {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid image format"
-            });
-        }
+                    message:
+                        "Drawing image is required"
 
-        const mimeType = match[1];
-        const base64Image = match[2];
+                });
 
-        console.log("🤖 Sending drawing to Gemini...");
+            }
 
-        // ========================================
-        // PROMPT
-        // ========================================
 
-        const prompt = `
+            console.log(
+                "🖼️ Drawing received"
+            );
+
+
+            console.log(
+                "🤖 Preparing image for Gemini..."
+            );
+
+
+            // ====================================
+            // IMAGE REGEX
+            // ====================================
+
+            const match =
+                image.match(
+                    /^data:(image\/[a-zA-Z+]+);base64,(.+)$/
+                );
+
+
+            if (!match) {
+
+                return res.status(400).json({
+
+                    success: false,
+
+                    message:
+                        "Invalid image format"
+
+                });
+
+            }
+
+
+            const mimeType =
+                match[1];
+
+
+            const base64Image =
+                match[2];
+
+
+            // ====================================
+            // PROMPT
+            // ====================================
+
+            const prompt = `
+
 You are a professional frontend developer.
 
-Analyze this hand-drawn website wireframe.
+Analyze the hand-drawn website wireframe.
 
 Create a complete modern responsive website based on the drawing.
 
-Return ONLY a valid JSON object.
+Return ONLY valid JSON.
 
 Use exactly this structure:
 
@@ -201,193 +322,475 @@ Use exactly this structure:
   "components": [],
   "description": "",
   "html": "",
-  "css": ""
+  "css": "",
+  "js": ""
 }
 
-Rules:
+IMPORTANT JSON RULES:
+
+1. The response MUST be valid JSON.
+
+2. Escape every double quote inside HTML, CSS and JavaScript strings.
+
+3. Use \\n for line breaks inside strings.
+
+4. Do not use markdown code fences.
+
+5. Do not write anything before or after the JSON.
+
+6. Do not use unescaped quotation marks inside string values.
+
+7. Make sure JSON.parse() can parse the response directly.
+
+WEBSITE RULES:
 
 1. components must contain detected website elements.
-2. description must briefly explain the website.
-3. html must contain ONLY HTML inside the body.
-4. css must contain complete CSS for the generated website.
-5. Make the website responsive.
-6. Do not use JavaScript.
-7. Do not use external libraries.
-8. Use semantic HTML.
-9. Make the design clean and professional.
-10. Do not use markdown code fences.
-11. Do not include explanations outside the JSON.
-12. Escape all double quotes inside JSON string values.
-13. Escape newline characters inside HTML and CSS strings correctly.
-14. Return syntactically valid JSON that can be parsed directly using JSON.parse().
+
+2. description must briefly describe the generated website.
+
+3. html must contain only HTML body content.
+
+4. css must contain complete CSS.
+
+5. js must contain JavaScript required for interactions.
+
+6. JavaScript is allowed.
+
+7. Buttons should work when possible.
+
+8. Navigation links should work.
+
+9. Forms should have basic interaction.
+
+10. Make the website responsive.
+
+11. Do not use external libraries.
+
+12. Use semantic HTML.
+
+13. Make the design clean and professional.
+
+14. Do not invent fake personal information or achievements unless they are clearly represented in the drawing.
+
+15. Return valid JSON only.
+
 `;
 
-        // ========================================
-        // GEMINI CONTENT
-        // ========================================
 
-        const contents = [
-            {
-                role: "user",
-                parts: [
-                    {
-                        text: prompt
-                    },
-                    {
-                        inlineData: {
-                            mimeType: mimeType,
-                            data: base64Image
+            // ====================================
+            // GEMINI REQUEST
+            // ====================================
+
+            let response = null;
+
+            const maxRetries = 3;
+
+
+            for (
+                let attempt = 1;
+                attempt <= maxRetries;
+                attempt++
+            ) {
+
+                try {
+
+                    console.log(
+                        `🤖 Sending drawing to Gemini... Attempt ${attempt}/${maxRetries}`
+                    );
+
+
+                    response =
+                        await ai.models.generateContent({
+
+                            model:
+                                "gemini-3.6-flash",
+
+
+                            contents: [
+
+                                {
+
+                                    role:
+                                        "user",
+
+                                    parts: [
+
+                                        {
+                                            text:
+                                                prompt
+                                        },
+
+                                        {
+
+                                            inlineData: {
+
+                                                mimeType:
+                                                    mimeType,
+
+                                                data:
+                                                    base64Image
+
+                                            }
+
+                                        }
+
+                                    ]
+
+                                }
+
+                            ],
+
+
+                            config: {
+
+                                responseMimeType:
+                                    "application/json"
+
+                            }
+
+                        });
+
+
+                    console.log(
+                        "🤖 Gemini response received"
+                    );
+
+
+                    break;
+
+                }
+
+                catch (error) {
+
+                    console.error(
+                        `❌ Gemini attempt ${attempt} failed:`,
+                        error.message
+                    );
+
+
+                    if (
+                        error.status === 503 ||
+                        error.status === 429 ||
+                        error.status === 500
+                    ) {
+
+                        if (
+                            attempt <
+                            maxRetries
+                        ) {
+
+                            console.log(
+                                "⏳ Retrying in 3 seconds..."
+                            );
+
+
+                            await new Promise(
+                                resolve =>
+                                    setTimeout(
+                                        resolve,
+                                        3000
+                                    )
+                            );
+
                         }
+
+                        else {
+
+                            throw error;
+
+                        }
+
                     }
-                ]
+
+                    else {
+
+                        throw error;
+
+                    }
+
+                }
+
             }
-        ];
 
-        // ========================================
-        // CALL GEMINI
-        // ========================================
 
-        const response = await generateWebsiteWithRetry(
-            contents,
-            3
-        );
+            // ====================================
+            // GET RESPONSE
+            // ====================================
 
-        // ========================================
-        // GET RESPONSE TEXT
-        // ========================================
+            let result =
+                response?.text;
 
-        let result;
 
-        if (typeof response.text === "function") {
-            result = response.text();
-        } else {
-            result = response.text;
-        }
+            if (!result) {
 
-        if (!result) {
-            throw new Error(
-                "Gemini returned an empty response"
+                throw new Error(
+                    "Gemini returned an empty response"
+                );
+
+            }
+
+
+            console.log(
+                "📦 Raw Gemini response received"
             );
-        }
 
-        // ========================================
-        // PARSE JSON
-        // ========================================
 
-        const aiData = extractJSON(result);
+            // ====================================
+            // CLEAN RESPONSE
+            // ====================================
 
-        // ========================================
-        // VALIDATE RESULT
-        // ========================================
+            result =
+                cleanAIResponse(
+                    result
+                );
 
-        if (
-            typeof aiData !== "object" ||
-            aiData === null
-        ) {
-            throw new Error(
-                "Gemini returned an invalid website object"
-            );
-        }
 
-        console.log(
-            "✅ Website generated successfully"
-        );
+            // ====================================
+            // FIRST JSON PARSE
+            // ====================================
 
-        // ========================================
-        // SEND TO FRONTEND
-        // ========================================
+            let aiData;
 
-        res.json({
-            success: true,
 
-            components:
-                Array.isArray(aiData.components)
+            try {
+
+                aiData =
+                    JSON.parse(
+                        result
+                    );
+
+
+                console.log(
+                    "✅ JSON parsed successfully"
+                );
+
+            }
+
+            catch (firstError) {
+
+                console.log(
+                    "⚠️ Normal JSON parsing failed"
+                );
+
+
+                console.log(
+                    "🔧 Trying automatic JSON repair..."
+                );
+
+
+                // ====================================
+                // REPAIR JSON
+                // ====================================
+
+                const repaired =
+                    repairJSON(
+                        result
+                    );
+
+
+                try {
+
+                    aiData =
+                        JSON.parse(
+                            repaired
+                        );
+
+
+                    console.log(
+                        "✅ JSON repaired successfully"
+                    );
+
+                }
+
+                catch (secondError) {
+
+                    console.error(
+                        "❌ JSON repair failed"
+                    );
+
+
+                    console.error(
+                        "Raw Gemini response:"
+                    );
+
+
+                    console.error(
+                        result
+                    );
+
+
+                    return res.status(500).json({
+
+                        success: false,
+
+                        message:
+                            "Gemini returned invalid JSON",
+
+                        error:
+                            secondError.message
+
+                    });
+
+                }
+
+            }
+
+
+            // ====================================
+            // NORMALIZE RESPONSE
+            // ====================================
+
+            const components =
+                Array.isArray(
+                    aiData.components
+                )
                     ? aiData.components
-                    : [],
+                    : [];
 
-            description:
+
+            const description =
                 typeof aiData.description === "string"
                     ? aiData.description
-                    : "",
+                    : "";
 
-            html:
+
+            const html =
                 typeof aiData.html === "string"
                     ? aiData.html
-                    : "",
+                    : "";
 
-            css:
+
+            const css =
                 typeof aiData.css === "string"
                     ? aiData.css
-                    : ""
-        });
+                    : "";
 
-    } catch (error) {
 
-        // ========================================
-        // CLEAN ERROR LOG
-        // ========================================
+            const js =
+                typeof aiData.js === "string"
+                    ? aiData.js
+                    : "";
 
-        console.log(
-            "⚠️ Website generation could not be completed."
-        );
 
-        // ========================================
-        // FRIENDLY ERROR MESSAGE
-        // ========================================
+            // ====================================
+            // CHECK HTML
+            // ====================================
 
-        let message =
-            "AI website generation failed";
+            if (!html) {
 
-        if (error.status === 503) {
+                console.warn(
+                    "⚠️ Gemini returned empty HTML"
+                );
 
-            message =
-                "Gemini is temporarily busy. Please try again.";
+            }
 
-        } else if (error.status === 429) {
 
-            message =
-                "Gemini request limit reached. Please try again later.";
+            // ====================================
+            // SUCCESS
+            // ====================================
 
-        } else if (error.status === 400) {
+            console.log(
+                "================================"
+            );
 
-            message =
-                "Invalid request sent to Gemini.";
 
-        } else if (
-            error.message &&
-            error.message.toLowerCase().includes("invalid json")
-        ) {
+            console.log(
+                "✅ Website generated successfully"
+            );
 
-            message =
-                "Gemini generated invalid website data. Please try again.";
 
-        } else if (
-            error.message &&
-            error.message.toLowerCase().includes("empty response")
-        ) {
+            console.log(
+                "HTML:",
+                html.length,
+                "characters"
+            );
 
-            message =
-                "Gemini returned an empty response. Please try again.";
+
+            console.log(
+                "CSS:",
+                css.length,
+                "characters"
+            );
+
+
+            console.log(
+                "JS:",
+                js.length,
+                "characters"
+            );
+
+
+            console.log(
+                "Components:",
+                components.length
+            );
+
+
+            console.log(
+                "================================"
+            );
+
+
+            // ====================================
+            // SEND TO FRONTEND
+            // ====================================
+
+            res.json({
+
+                success: true,
+
+                components:
+                    components,
+
+                description:
+                    description,
+
+                html:
+                    html,
+
+                css:
+                    css,
+
+                js:
+                    js
+
+            });
 
         }
 
-        res.status(500).json({
-            success: false,
-            message: message
-        });
+
+        catch (error) {
+
+            console.error(
+                "❌ Gemini Error:",
+                error
+            );
+
+
+            res.status(500).json({
+
+                success: false,
+
+                message:
+                    "AI website generation failed",
+
+                error:
+                    error.message
+
+            });
+
+        }
+
     }
-});
+);
+
 
 // ========================================
-// SERVER
+// START SERVER
 // ========================================
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-
-    console.log(
-        `🚀 Draw2Web AI backend running at http://localhost:${PORT}`
-    );
-
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`🚀 Draw2Web AI backend running on port ${PORT}`);
 });

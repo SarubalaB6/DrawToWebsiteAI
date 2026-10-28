@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,15 +6,22 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Draw2Web AI</title>
 
-    <meta name="description"
-          content="Draw your website idea and transform your sketch into a modern website with Draw2Web AI.">
+    <meta
+        name="description"
+        content="Draw your website idea and transform your sketch into a modern website with Draw2Web AI."
+    >
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 
 </head>
 
@@ -30,6 +38,7 @@
     <div class="logo">
         Draw2Web <span>AI</span>
     </div>
+
 
     <nav>
 
@@ -59,22 +68,37 @@
      HERO
 ========================================== -->
 
-<section class="hero" id="home">
+<section
+    class="hero"
+    id="home"
+>
 
     <div class="hero-content">
 
         <h1>
+
             Turn Your
-            <span>Drawing Into a Website</span>
+
+            <span>
+                Drawing Into a Website
+            </span>
+
         </h1>
 
+
         <p>
-            Draw your website idea like a simple wireframe
-            and transform your design into a modern responsive
-            website.
+
+            Draw your website idea like a simple
+            wireframe and transform your design
+            into a modern responsive website.
+
         </p>
 
-        <a href="#editor" class="hero-button">
+
+        <a
+            href="#editor"
+            class="hero-button"
+        >
             ✏️ Start Drawing
         </a>
 
@@ -88,7 +112,10 @@
      DRAWING EDITOR
 ========================================== -->
 
-<section class="editor-section" id="editor">
+<section
+    class="editor-section"
+    id="editor"
+>
 
     <div class="section-title">
 
@@ -101,6 +128,7 @@
         </p>
 
     </div>
+
 
 
     <!-- TOOLBAR -->
@@ -126,19 +154,17 @@
 
         <button
             type="button"
-            onclick="undoCanvas()">
-
+            onclick="undoCanvas()"
+        >
             ↩ Undo
-
         </button>
 
 
         <button
             type="button"
-            onclick="clearCanvas()">
-
+            onclick="clearCanvas()"
+        >
             🗑 Clear
-
         </button>
 
     </div>
@@ -149,12 +175,12 @@
 
     <div class="canvas-container">
 
-        <canvas id="drawingCanvas"></canvas>
+        <canvas
+            id="drawingCanvas"
+        ></canvas>
 
         <div class="canvas-hint">
-
             ✏️ Draw your website layout here
-
         </div>
 
     </div>
@@ -168,10 +194,9 @@
         <button
             id="generateBtn"
             type="button"
-            onclick="generateWebsite()">
-
+            onclick="generateWebsite()"
+        >
             🤖 Generate Website
-
         </button>
 
     </div>
@@ -184,7 +209,10 @@
      PREVIEW
 ========================================== -->
 
-<section class="preview-section" id="preview">
+<section
+    class="preview-section"
+    id="preview"
+>
 
     <div class="section-title">
 
@@ -206,19 +234,17 @@
 
         <button
             type="button"
-            onclick="desktopPreview()">
-
+            onclick="desktopPreview()"
+        >
             🖥 Desktop
-
         </button>
 
 
         <button
             type="button"
-            onclick="mobilePreview()">
-
+            onclick="mobilePreview()"
+        >
             📱 Mobile
-
         </button>
 
     </div>
@@ -231,8 +257,8 @@
 
         <iframe
             id="websitePreview"
-            title="Generated Website Preview">
-        </iframe>
+            title="Generated Website Preview"
+        ></iframe>
 
     </div>
 
@@ -256,26 +282,92 @@
         </div>
 
     </div>
+
+
+
+    <!-- ==========================================
+         GENERATED CODE
+    =========================================== -->
+
     <div class="code-section">
 
-    <div class="code-header">
-        <h3>💻 Generated Code</h3>
+        <div class="code-header">
 
-        <div>
-            <button onclick="copyHTML()">📋 Copy HTML</button>
-            <button onclick="copyCSS()">📋 Copy CSS</button>
-            <button onclick="downloadWebsite()">💾 Download</button>
+            <h3>
+                💻 Generated Code
+            </h3>
+
+
+            <div>
+
+                <button
+                    onclick="copyHTML()"
+                >
+                    📋 Copy HTML
+                </button>
+
+
+                <button
+                    onclick="copyCSS()"
+                >
+                    📋 Copy CSS
+                </button>
+
+
+                <button
+                    onclick="copyJS()"
+                >
+                    📋 Copy JS
+                </button>
+
+
+                <button
+                    onclick="downloadWebsite()"
+                >
+                    💾 Download
+                </button>
+
+            </div>
+
         </div>
+
+
+
+        <!-- CODE TABS -->
+
+        <div class="code-tabs">
+
+            <button
+                onclick="showHTML()"
+            >
+                HTML
+            </button>
+
+
+            <button
+                onclick="showCSS()"
+            >
+                CSS
+            </button>
+
+
+            <button
+                onclick="showJS()"
+            >
+                JS
+            </button>
+
+        </div>
+
+
+
+        <!-- CODE VIEWER -->
+
+        <pre id="codeViewer">
+Generate a website to view the code.
+        </pre>
+
     </div>
-
-    <div class="code-tabs">
-        <button onclick="showHTML()">HTML</button>
-        <button onclick="showCSS()">CSS</button>
-    </div>
-
-    <pre id="codeViewer">Generate a website to view the code.</pre>
-
-</div>
 
 </section>
 
@@ -285,7 +377,10 @@
      HOW IT WORKS
 ========================================== -->
 
-<section class="how-section" id="how">
+<section
+    class="how-section"
+    id="how"
+>
 
     <div class="section-title">
 
@@ -352,8 +447,8 @@
             </h3>
 
             <p>
-                HTML and CSS are generated from your
-                website idea.
+                HTML, CSS and JavaScript are generated
+                from your website idea.
             </p>
 
         </div>
@@ -413,36 +508,7 @@
 <script src="script.js"></script>
 
 
-<!-- ==========================================
-     PREVIEW FUNCTIONS
-========================================== -->
-
-<script>
-
-function desktopPreview() {
-
-    const preview =
-        document.getElementById("websitePreview");
-
-    preview.style.width = "100%";
-    preview.style.height = "600px";
-
-}
-
-
-function mobilePreview() {
-
-    const preview =
-        document.getElementById("websitePreview");
-
-    preview.style.width = "390px";
-    preview.style.height = "650px";
-
-}
-
-</script>
-
-
 </body>
 
 </html>
+```
